@@ -1,0 +1,58 @@
+.container {
+  height: 100vh;
+  width: 100%;
+  background: #000; /* Optional: darker bg to highlight logo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.logoWrapper {
+  position: relative;
+  width: 180px; /* adjust as per your logo size */
+  height: 180px;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+  position: relative;
+  filter: grayscale(100%) brightness(0.5);
+  transition: filter 1s ease;
+  animation: revealWhite 3s forwards ease-in-out;
+}
+
+/* White fill animation from bottom to top */
+.fillEffect {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: white;
+  z-index: 0;
+  animation: fillUp 3s forwards ease-in-out;
+  border-radius: 50%;
+}
+
+@keyframes fillUp {
+  0% {
+    height: 0%;
+  }
+  100% {
+    height: 100%;
+  }
+}
+
+@keyframes revealWhite {
+  0% {
+    filter: grayscale(100%) brightness(0.3);
+  }
+  100% {
+    filter: grayscale(0%) brightness(1);
+  }
+}

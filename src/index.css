@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+*{
+  padding: 0;
+  margin: 0;
+  /* custom cursor image */
+  cursor: url(assets/cursor.png), auto;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+body{
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  background-color: #ECF2F7;
+}
+
+.swiper-pagination {
+  position: static;
+  margin-top: 30px;
+}
+
+.cursor {
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+  animation: cursorAnim 0.5s infinite alternate;
+}
+
+.cursor::after {
+  content: "";
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  border: 8px solid #016DD4;
+  border-radius: 50%;
+  opacity: 0.5;
+  top: -8px;
+  left: -8px;
+  animation: cursorAnim2 0.5s infinite alternate;
+}
+
+@keyframes cursorAnim {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.7);
+  }
+}
+
+@keyframes cursorAnim2 {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.4);
+  }
+}
+
+@keyframes cursorAnim3 {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(3);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.expand {
+  animation: cursorAnim3 0.5s forwards;
+  border-color: #012648;
+}
+
+/* Add this to your CSS file */
+@keyframes waveAnimation {
+  0% {
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    transform: translateY(-5px) scaleX(1.05);
+  }
+  100% {
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+.wave-separator {
+  animation: waveAnimation 3s ease-in-out infinite;
+  height: 100%;
+  width: 100%;
+}
+
+html {
+  scrollbar-width: thin; /* 'auto', 'thin', or 'none' */
+  scrollbar-color: #016DD4 #012648; /* Handle and track colors */
+}
+@keyframes fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-left {
+  animation: fade-in-left 0.7s ease forwards;
+}
+
+.animate-fade-in-right {
+  animation: fade-in-right 0.7s ease forwards;
+}
+
+/* Generic fade-in on scroll helper */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.fade-in-section.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
