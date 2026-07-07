@@ -1,13 +1,17 @@
 import {
   Facebook,
   Instagram,
-  X,
-  Linkedin,
-  Youtube,
   ArrowUp,
-  ShoppingCart,
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import logo from "../../assets/logo.png";
+
+// Floating WhatsApp button deep-link with a pre-filled greeting.
+const WHATSAPP_NUMBER = "971525459375";
+const WHATSAPP_GREETING = "Hi, I'm interested in your coffee machines/products.";
+const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  WHATSAPP_GREETING
+)}`;
 
 const Footer = () => {
   return (
@@ -33,8 +37,7 @@ const Footer = () => {
               { label: "Shop", href: "/shop" },
               { label: "Coffee", href: "/coffee" },
               { label: "Machine", href: "/machine" },
-              { label: "Read our Blog", href: "#" },
-              { label: "FAQ's", href: "#" },
+              { label: "FAQ's", href: "/#faq" },
             ].map((item, idx) => (
               <li key={idx}>
                 <a
@@ -80,17 +83,17 @@ const Footer = () => {
           <h4 className="text-white font-bold text-lg mb-4">READ OUR TERMS</h4>
           <ul className="space-y-2">
             {[
-              "Privacy Policy",
-              "Returns & Refunds",
-              "Terms & Conditions",
-              "Shipping Policy",
-            ].map((item, idx) => (
-              <li key={idx}>
+              { label: "Privacy Policy", href: "/policies#privacy" },
+              { label: "Returns & Refunds", href: "/policies#returns-refunds" },
+              { label: "Terms & Conditions", href: "/policies#terms" },
+              { label: "Shipping Policy", href: "/policies#shipping" },
+            ].map((item) => (
+              <li key={item.label}>
                 <a
-                  href="#"
+                  href={item.href}
                   className="hover:text-white transition-colors duration-200"
                 >
-                  {item}
+                  {item.label}
                 </a>
               </li>
             ))}
@@ -107,17 +110,31 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center order-1 sm:order-2 space-y-4 sm:space-y-0 sm:space-x-8">
           {/* Social Icons */}
           <div className="flex space-x-4">
-            {[Facebook, Instagram, X, Linkedin, Youtube].map((Icon, idx) => (
-              <a key={idx} href="#" aria-label="Social Link">
-                <Icon
-                  size={22}
-                  className="text-white/80 hover:text-white transition-colors duration-200"
-                />
-              </a>
-            ))}
+            <a
+              href="https://www.facebook.com/profile.php?id=100092484216466"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit our Facebook page"
+            >
+              <Facebook
+                size={22}
+                className="text-white/80 hover:text-white transition-colors duration-200"
+              />
+            </a>
+            <a
+              href="https://www.instagram.com/coffeepl_dubai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit our Instagram page"
+            >
+              <Instagram
+                size={22}
+                className="text-white/80 hover:text-white transition-colors duration-200"
+              />
+            </a>
           </div>
 
-          {/* Payment Icons */}
+          {/* Payment Icons — hidden for now (uncomment to restore)
           <div className="flex items-center space-x-2">
             {[
               "https://img.icons8.com/color/48/000000/google-pay.png",
@@ -130,23 +147,27 @@ const Footer = () => {
               </span>
             ))}
           </div>
+          */}
         </div>
       </div>
 
       {/* Floating Buttons */}
       <div className="fixed bottom-8 right-8 flex flex-col space-y-4 z-50">
+        <a
+          href={WHATSAPP_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on WhatsApp"
+          className="bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#1ebe5d] transition-colors flex items-center justify-center"
+        >
+          <FaWhatsapp size={24} />
+        </a>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="bg-COFFEE_BEAN_BROWN text-white p-4 rounded-full shadow-lg hover:bg-[#6b3a35] transition-colors"
           aria-label="Scroll to top"
         >
           <ArrowUp size={24} color="white" />
-        </button>
-        <button
-          className="bg-COFFEE_BEAN_BROWN text-white p-4 rounded-full shadow-lg hover:bg-[#6b3a35] transition-colors"
-          aria-label="Shopping cart"
-        >
-          <ShoppingCart size={24} color="white" />
         </button>
       </div>
     </footer>

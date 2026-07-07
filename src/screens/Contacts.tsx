@@ -1,3 +1,6 @@
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import Navbar from "../components/Navbar";
 import contactBanner from "../assets/contactBanner.png";
 import Footer from "../components/Footer";
@@ -5,7 +8,107 @@ import Footer from "../components/Footer";
 const DARK_GREY_BG = "#2a2a2a";
 const CONTACT_BANNER_IMAGE = contactBanner;
 
+// Contact Form API endpoint — set VITE_CONTACT_API_URL in your .env file.
+const CONTACT_API_URL =
+  (import.meta.env.VITE_CONTACT_API_URL as string) ||
+  "https://coffeepl.com/email-api/send-email.php";
+
+const initialFormData = {
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
+};
+
 const Contacts = () => {
+  const [searchParams] = useSearchParams();
+  const [formData, setFormData] = useState(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const subjectParam = searchParams.get("subject");
+    const messageParam = searchParams.get("message");
+    if (subjectParam || messageParam) {
+      setFormData((prev) => ({
+        ...prev,
+        subject: subjectParam || prev.subject,
+        message: messageParam || prev.message,
+      }));
+    }
+  }, [searchParams]);
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(CONTACT_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject || undefined,
+          message: formData.message,
+        }),
+      });
+
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch {
+        // Fallback if endpoint does not return JSON
+      }
+
+      if (response.ok && data?.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Message sent!",
+          text:
+            data.message ||
+            "Thanks for reaching out. Our team will get back to you shortly.",
+          confirmButtonColor: "#5B3A29",
+        });
+        setFormData(initialFormData);
+      } else {
+        const errorText =
+          (data?.errors && Array.isArray(data.errors)
+            ? data.errors.join(" ")
+            : data?.message) ||
+          "We couldn't send your message. Please try again or email info@coffeepl.com.";
+
+        Swal.fire({
+          icon: "error",
+          title: "Something went wrong",
+          text: errorText,
+          confirmButtonColor: "#5B3A29",
+        });
+      }
+    } catch {
+      Swal.fire({
+        icon: "error",
+        title: "Network error",
+        text: "We couldn't reach the server. Please check your connection and try again.",
+        confirmButtonColor: "#5B3A29",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+
   return (
     <div className={`min-h-screen bg-[${DARK_GREY_BG}] text-white`}>
       <Navbar />
@@ -51,7 +154,7 @@ const Contacts = () => {
           </p>
 
           {/* Contact Form */}
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Name and Email (Two columns on desktop, stacked on mobile) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -64,6 +167,9 @@ const Contacts = () => {
                 <input
                   type="text"
                   id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   className="w-full p-3 bg-gray-700 border-2 border-gray-600 focus:border-white outline-none text-white rounded-md"
                   required
                 />
@@ -78,6 +184,9 @@ const Contacts = () => {
                 <input
                   type="email"
                   id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full p-3 bg-gray-700 border-2 border-gray-600 focus:border-white outline-none text-white rounded-md"
                   required
                 />
@@ -94,9 +203,12 @@ const Contacts = () => {
               </label>
               <select
                 id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
                 className="w-full p-3 bg-gray-700 border-2 border-gray-600 focus:border-white outline-none text-white appearance-none rounded-md"
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Please Select
                 </option>
                 <option value="General Inquiry">General Inquiry</option>
@@ -116,7 +228,9 @@ const Contacts = () => {
               </label>
               <textarea
                 id="message"
-                // FIX: Changed rows="5" (string) to rows={5} (number) for TypeScript compatibility
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 rows={5}
                 className="w-full p-3 bg-gray-700 border-2 border-gray-600 focus:border-white outline-none text-white rounded-md resize-none"
                 required
@@ -126,9 +240,10 @@ const Contacts = () => {
             {/* Submit Button (Red) */}
             <button
               type="submit"
-              className={`px-8 py-3 bg-red-800 text-white font-bold uppercase tracking-wider rounded-md hover:bg-red-700 transition duration-300 shadow-lg`}
+              disabled={isSubmitting}
+              className={`px-8 py-3 bg-red-800 text-white font-bold uppercase tracking-wider rounded-md hover:bg-red-700 transition duration-300 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed`}
             >
-              Submit
+              {isSubmitting ? "Sending..." : "Submit"}
             </button>
           </form>
         </div>

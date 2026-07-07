@@ -11,9 +11,7 @@ import pitcher from '../assets/coffeepljug600ml.png';
 import brush from '../assets/jercey-300x300.png';
 import knockBox from '../assets/FROSTED HARD CUP 500 ML- 90MM, 15G.jpg';
 import scale from '../assets/shaker.jpg';
-import roballiGrinderThumb from '../assets/roballigrinder2.jpg';
-import roballiGrinder1 from '../assets/roballigrinder1.jpg';
-import roballiGrinder3 from '../assets/roballigrinder3.jpg';
+import eurekaAtomProGrinder from '../assets/eureka-atom-pro-grinder.jpeg';
 
 export interface Product {
   id: string;
@@ -45,8 +43,7 @@ export const productsData: Product[] = [
   {
     id: 'coffee-100-arabica',
     title: '100% Arabica',
-    price: '',
-    contactForPrice: true,
+    price: 'AED 150',
     imageUrl: sampleban,
     category: 'coffee',
     description: 'Premium-grade 100% Arabica coffee beans, handpicked from high-altitude farms.',
@@ -73,8 +70,7 @@ export const productsData: Product[] = [
   {
     id: 'coffee-30-70-blend',
     title: '30% Arabica - 70% Robusta',
-    price: '',
-    contactForPrice: true,
+    price: 'AED 110',
     imageUrl: arabica30,
     category: 'coffee',
     description: 'A bold and balanced blend of 30% Arabica and 70% Robusta beans.',
@@ -160,9 +156,8 @@ export const productsData: Product[] = [
     id: 'machine-roballi-grinder',
     title: 'ROBALLI GRINDER',
     price: 'AED 3,800',
-    imageUrl: roballiGrinderThumb,
-    imageGallery: [roballiGrinder1, roballiGrinder3],
-    imageObjectPosition: 'left',
+    imageUrl: eurekaAtomProGrinder,
+    imageObjectPosition: 'center',
     category: 'machine',
     description: 'Professional coffee grinder by Boston Coolers for consistent, precise grinding in cafés and home setups.',
     longDescription: 'The ROBALLI GRINDER delivers reliable, uniform grind quality for espresso and filter coffee. Built for daily use in professional environments, it pairs clean design with dependable performance. Ideal for anyone who wants repeatable results and a grinder that fits the CoffeePL / Boston Coolers machinery line.',
@@ -416,6 +411,21 @@ export const getProductById = (id: string): Product | undefined => {
 export const getProductsByCategory = (category: string): Product[] => {
   return productsData.filter(product => product.category === category && !product.hidden);
 };
+
+// WhatsApp business number used for price enquiries.
+export const WHATSAPP_NUMBER = '971525459375';
+
+// Builds a WhatsApp deep link with a product-specific price enquiry message.
+export const getPriceEnquiryWhatsAppLink = (productName: string): string =>
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    `Hi, I'd like to know the price for ${productName}.`
+  )}`;
+
+// Builds a WhatsApp deep link with a product-specific general enquiry message.
+export const getProductEnquiryWhatsAppLink = (productName: string): string =>
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    `Hi, I'm interested in ${productName}. Could you share more details?`
+  )}`;
 
 
 

@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import Navbar from "../components/Navbar";
 import ScrollHeroDiv from "../components/ScrollHeroDiv";
 import { useNavigate } from "react-router-dom";
@@ -15,9 +16,41 @@ import machine1 from "../assets/machine1.png";
 import tool from "../assets/tool.png";
 import logoBanner from "../assets/logo-banner.jpeg";
 
+// Toggle to bring the homepage discounts banner back (set to true to show).
+const SHOW_DISCOUNT_BANNER = false;
+
+const faqItems = [
+  {
+    question: "What products do you sell?",
+    answer:
+      "We offer premium coffee beans, professional espresso machines, grinders, and coffee-making tools & accessories — everything you need for the perfect cup.",
+  },
+  {
+    question: "Do you offer machine rentals?",
+    answer:
+      "Yes — we offer machine rentals starting at AED 25/day, ideal for events, offices, or trying a machine before you buy.",
+  },
+  {
+    question: "How can I get a price for a machine?",
+    answer:
+      "Tap \"Contact for price\" on any machine's page to message us on WhatsApp, or reach out through our Contact page and our team will get back to you.",
+  },
+  {
+    question: "Where are you located?",
+    answer:
+      "We're based in International City, Morocco Cluster, I12 Building, Dubai, United Arab Emirates.",
+  },
+  {
+    question: "How do I contact you?",
+    answer:
+      "Call us at +971 55 441 0816, email info@coffeepl.com, chat with us on WhatsApp, or use the form on our Contact page.",
+  },
+];
+
 const Home = () => {
   const navigate = useNavigate();
   const coverRef = useRef<HTMLDivElement | null>(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const target = coverRef.current;
@@ -153,18 +186,20 @@ const Home = () => {
       </section>
 
       {/* --- Discounts Banner: full width (1920×700) --- */}
-      <section ref={coverRef} className="fade-in-section w-full max-w-full overflow-x-hidden bg-white pt-8 pb-0">
-        <div className="w-full max-w-full min-w-0 overflow-hidden" style={{ aspectRatio: "1920/700" }}>
-          <img
-            src={discountBanner}
-            alt="Discounts and offers"
-            className="w-full h-full max-w-full object-cover"
-            loading="lazy"
-            width={1920}
-            height={700}
-          />
-        </div>
-      </section>
+      {SHOW_DISCOUNT_BANNER && (
+        <section ref={coverRef} className="fade-in-section w-full max-w-full overflow-x-hidden bg-white pt-8 pb-0">
+          <div className="w-full max-w-full min-w-0 overflow-hidden" style={{ aspectRatio: "1920/700" }}>
+            <img
+              src={discountBanner}
+              alt="Discounts and offers"
+              className="w-full h-full max-w-full object-cover"
+              loading="lazy"
+              width={1920}
+              height={700}
+            />
+          </div>
+        </section>
+      )}
 
       {/* --- About CoffeePL Section --- */}
       <section className="bg-white text-black py-24 px-8 md:px-20 flex flex-col md:flex-row items-center justify-center gap-12">
@@ -303,6 +338,49 @@ const Home = () => {
           alt="Brand Banner"
           className="w-full h-[100%] object-cover"
         />
+      </section>
+
+      {/* --- FAQ Section --- */}
+      <section id="faq" className="bg-white py-24 px-4 sm:px-8 lg:px-24">
+        <div className="max-w-[900px] mx-auto">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-16 tracking-tight text-center">
+            <span className="text-gray-900 mr-2">FREQUENTLY</span>
+            <span className="text-COFFEE_BEAN_BROWN">ASKED QUESTIONS</span>
+          </h2>
+
+          <div className="space-y-4">
+            {faqItems.map((item, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div
+                  key={item.question}
+                  className="bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                  >
+                    <span className="text-lg font-bold text-gray-900">
+                      {item.question}
+                    </span>
+                    <ChevronDown
+                      className={`w-5 h-5 flex-shrink-0 text-COFFEE_BEAN_BROWN transition-transform duration-300 ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {isOpen && (
+                    <p className="px-6 pb-5 text-gray-600 text-lg leading-relaxed">
+                      {item.answer}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
       <Footer />

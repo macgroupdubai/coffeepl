@@ -1,6 +1,9 @@
 # dependencies
 node_modules/
 
+# local tooling
+.claude/
+
 # build files
 dist/
 build/

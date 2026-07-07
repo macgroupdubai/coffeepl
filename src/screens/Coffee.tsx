@@ -5,7 +5,7 @@ import smallImg from "../assets/coffee-30arabica.png";
 import FilterSidebar from "../components/Filter";
 import ProductCard from "../components/ProductCard";
 import Footer from "../components/Footer";
-import { getProductsByCategory } from "../utils/productsData";
+import { getProductsByCategory, getPriceEnquiryWhatsAppLink } from "../utils/productsData";
 
 const Coffee = () => {
   const navigate = useNavigate();
@@ -58,16 +58,16 @@ const Coffee = () => {
                   {/* Top Section: Price and Title */}
                   <div className="mb-4 lg:mb-6 overflow-hidden pr-6 lg:pr-2">
                     {product.contactForPrice ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate('/contacts');
-                        }}
-                        className="mb-2 lg:mb-3 px-4 py-2.5 rounded-lg bg-white text-COFFEE_BEAN_BROWN text-sm lg:text-base font-bold uppercase tracking-wide hover:bg-white/90 transition-colors drop-shadow-lg"
+                      <a
+                        href={getPriceEnquiryWhatsAppLink(product.title)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Ask the price for ${product.title} on WhatsApp`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-block mb-2 lg:mb-3 px-4 py-2.5 rounded-lg bg-white text-COFFEE_BEAN_BROWN text-sm lg:text-base font-bold uppercase tracking-wide hover:bg-white/90 transition-colors drop-shadow-lg"
                       >
                         Contact for price
-                      </button>
+                      </a>
                     ) : (
                       <p className="text-2xl lg:text-4xl font-bold text-white mb-2 lg:mb-3 drop-shadow-lg">
                         {product.price}

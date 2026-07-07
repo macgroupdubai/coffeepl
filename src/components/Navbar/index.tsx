@@ -11,7 +11,8 @@ const mainNavLinks: NavLinkItem[] = [
   { name: "COFFEE", to: "/coffee" },
   { name: "MACHINE", to: "/machine" },
   { name: "RENTAL", to: "/rental" },
-  { name: "SUBSCRIPTIONS", to: "/subscription" },
+  // Subscriptions temporarily unlinked — route still lives at /subscription.
+  // { name: "SUBSCRIPTIONS", to: "/subscription" },
   { name: "TRAINING", to: "/training" },
   { name: "WHOLESALE", to: "/wholesale" },
   { name: "CONTACT US", to: "/contacts" },

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, Check, ShoppingCart, Heart } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { getProductById } from '../utils/productsData';
+import { getProductById, getPriceEnquiryWhatsAppLink, getProductEnquiryWhatsAppLink } from '../utils/productsData';
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -139,13 +139,31 @@ const ProductDetails = () => {
 
             {/* Price */}
             {product.contactForPrice ? (
-              <button
-                type="button"
-                onClick={() => navigate('/contacts')}
-                className="inline-block px-8 py-4 rounded-lg bg-COFFEE_BEAN_BROWN text-white text-lg font-bold uppercase tracking-wide hover:bg-opacity-90 transition-colors shadow-lg"
-              >
-                Contact for price
-              </button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a
+                  href={getPriceEnquiryWhatsAppLink(product.title)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Ask the price for ${product.title} on WhatsApp`}
+                  className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-green-600 hover:bg-green-700 text-white text-lg font-bold uppercase tracking-wide transition-colors shadow-lg"
+                >
+                  Contact on WhatsApp
+                </a>
+                <button
+                  onClick={() =>
+                    navigate(
+                      `/contacts?subject=${encodeURIComponent(
+                        `Price Inquiry: ${product.title}`
+                      )}&message=${encodeURIComponent(
+                        `Hi, I'd like to know the price for ${product.title}.`
+                      )}`
+                    )
+                  }
+                  className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-COFFEE_BEAN_BROWN text-white text-lg font-bold uppercase tracking-wide hover:opacity-90 transition-opacity shadow-lg"
+                >
+                  Enquire by Email
+                </button>
+              </div>
             ) : (
               <div className="text-4xl font-bold text-COFFEE_BEAN_BROWN">
                 {product.price}
@@ -191,13 +209,32 @@ const ProductDetails = () => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
               {!product.contactForPrice && (
-                <button 
-                  onClick={() => navigate("/contacts")}
-                  className="flex-1 bg-COFFEE_BEAN_BROWN text-white px-8 py-4 rounded-lg font-semibold uppercase tracking-wide hover:bg-opacity-90 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  Add to Cart
-                </button>
+                <>
+                  <a
+                    href={getProductEnquiryWhatsAppLink(product.title)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Contact us on WhatsApp"
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg font-semibold uppercase tracking-wide transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl animate-fade-in"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Enquire on WhatsApp
+                  </a>
+                  <button
+                    onClick={() =>
+                      navigate(
+                        `/contacts?subject=${encodeURIComponent(
+                          `Enquiry: ${product.title}`
+                        )}&message=${encodeURIComponent(
+                          `Hi, I'm interested in ${product.title}. Could you share more details?`
+                        )}`
+                      )
+                    }
+                    className="flex-1 bg-COFFEE_BEAN_BROWN text-white px-8 py-4 rounded-lg font-semibold uppercase tracking-wide hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                  >
+                    Enquire by Email
+                  </button>
+                </>
               )}
               <button className="px-8 py-4 border-2 border-COFFEE_BEAN_BROWN text-COFFEE_BEAN_BROWN rounded-lg font-semibold uppercase tracking-wide hover:bg-COFFEE_BEAN_BROWN hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
                 <Heart className="w-5 h-5" />

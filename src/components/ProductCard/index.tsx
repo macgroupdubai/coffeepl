@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getPriceEnquiryWhatsAppLink } from '../../utils/productsData';
 
 interface ProductCardProps {
   imageUrl: string;
@@ -26,9 +27,18 @@ const ProductCard = ({ imageUrl, title, price, contactForPrice, imageObjectPosit
     }
   };
 
-  const handleContactForPrice = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleContactForPrice = (e: MouseEvent<HTMLAnchorElement>) => {
+    // Prevent the parent card's navigate-to-detail click.
     e.stopPropagation();
-    navigate('/contacts');
+  };
+
+  const handleEmailEnquiry = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    navigate(
+      `/contacts?subject=${encodeURIComponent(
+        `Price Inquiry: ${title}`
+      )}&message=${encodeURIComponent(`Hi, I'd like to know the price for ${title}.`)}`
+    );
   };
 
   return (
@@ -60,13 +70,24 @@ const ProductCard = ({ imageUrl, title, price, contactForPrice, imageObjectPosit
           {title}
         </h3>
         {contactForPrice ? (
-          <button
-            type="button"
-            onClick={handleContactForPrice}
-            className="mt-3 w-full min-h-[48px] flex items-center justify-center px-4 py-2.5 rounded-lg bg-COFFEE_BEAN_BROWN text-white text-sm sm:text-base font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity"
-          >
-            Contact for price
-          </button>
+          <div className="mt-3 flex flex-col gap-2">
+            <a
+              href={getPriceEnquiryWhatsAppLink(title)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Ask the price for ${title} on WhatsApp`}
+              onClick={handleContactForPrice}
+              className="w-full min-h-[48px] flex items-center justify-center px-4 py-2.5 rounded-lg bg-green-600 text-white text-sm font-semibold uppercase tracking-wide hover:bg-green-700 transition-colors"
+            >
+              Contact on WhatsApp
+            </a>
+            <button
+              onClick={handleEmailEnquiry}
+              className="w-full min-h-[48px] flex items-center justify-center px-4 py-2.5 rounded-lg bg-COFFEE_BEAN_BROWN text-white text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity"
+            >
+              Enquire by Email
+            </button>
+          </div>
         ) : (
           <p className="text-gray-700 text-lg">{price}</p>
         )}

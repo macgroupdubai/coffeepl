@@ -14,6 +14,7 @@ const Contacts = lazy(() => import("../screens/Contacts"));
 const Coffee = lazy(() => import ("../screens/Coffee"))
 const ProductDetails = lazy(() => import("../screens/ProductDetails"));
 const Discounts = lazy(() => import("../screens/Discounts"));
+const Policies = lazy(() => import("../screens/Policies"));
 // ✅ Route definitions (clean, one per page)
 const router = createBrowserRouter([
   {
@@ -101,6 +102,14 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={<PageLoader />}>
         <ProductDetails />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/policies",
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <Policies />
       </Suspense>
     ),
   },

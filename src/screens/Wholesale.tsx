@@ -4,8 +4,13 @@ import CTABanner from "../assets/cta.jpeg";
 import Footer from "../components/Footer";
 import WholeSaleBanner from "../assets/wholesaleBanner.png";
 import MWholeSaleBanner from "../assets/m-wholesaleBanner.png";
+import Swal from "sweetalert2";
 
 const CTA_IMAGE = CTABanner;
+
+const CONTACT_API_URL =
+  (import.meta.env.VITE_CONTACT_API_URL as string) ||
+  "https://coffeepl.com/email-api/send-email.php";
 
 const Wholesale = () => {
   const [formData, setFormData] = useState({
@@ -42,10 +47,101 @@ const Wholesale = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission here
+
+    const messageDetails = `
+WHOLESALE INFORMATION ENQUIRY
+
+Company Details:
+- Company Name: ${formData.companyName}
+- Address: ${formData.address}
+- Contact Person: ${formData.name}
+- Email: ${formData.email}
+- Phone: ${formData.phone}
+
+Additional Details:
+- Have they tried our coffee?: ${formData.triedCoffee || "No choice"}
+- Business Type: ${formData.businessType || "No choice"}
+- How did they hear about us: ${formData.hearAbout || "Not specified"}
+
+Interests:
+- Products Interested In: ${formData.productsInterested.join(", ") || "None"}
+- Coffee Interested In: ${formData.coffeeInterested.join(", ") || "None"}
+- Equipment Interested In: ${formData.equipmentInterested.join(", ") || "None"}
+    `.trim();
+
+    Swal.fire({
+      title: "Sending Inquiry...",
+      text: "Please wait while we submit your wholesale request.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      const response = await fetch(CONTACT_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: `Wholesale Inquiry - ${formData.companyName}`,
+          message: messageDetails,
+        }),
+      });
+
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch {
+        // Fallback
+      }
+
+      if (response.ok && data?.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Inquiry Sent!",
+          text: data.message || "Thank you for contacting us. We will get back to you shortly.",
+          confirmButtonColor: "#522E2A",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          companyName: "",
+          address: "",
+          triedCoffee: "",
+          businessType: "",
+          productsInterested: [],
+          coffeeInterested: [],
+          equipmentInterested: [],
+          hearAbout: "",
+        });
+      } else {
+        const errorText =
+          (data?.errors && Array.isArray(data.errors)
+            ? data.errors.join(" ")
+            : data?.message) ||
+          "We encountered an issue submitting your inquiry. Please try again or email info@coffeepl.com.";
+        Swal.fire({
+          icon: "error",
+          title: "Submission Failed",
+          text: errorText,
+          confirmButtonColor: "#522E2A",
+        });
+      }
+    } catch {
+      Swal.fire({
+        icon: "error",
+        title: "Network Error",
+        text: "Could not reach the server. Please check your internet connection and try again.",
+        confirmButtonColor: "#522E2A",
+      });
+    }
   };
 
   const mapLocation = "https://www.google.com/maps?q=25.1620639,55.4191205&z=16";
@@ -533,7 +629,7 @@ const Wholesale = () => {
               className="block w-full h-full"
             >
               <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&t=&z=16&ie=UTF8&iwloc=&output=embed`}
+                src="https://www.google.com/maps?q=CoffeePL&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

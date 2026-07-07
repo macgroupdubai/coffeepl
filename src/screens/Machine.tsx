@@ -14,7 +14,6 @@ import mobileMachine2 from "../assets/m-machine2.png";
 import machine3 from "../assets/Full-automatic Cup Sealer.jpg";
 import machine4 from "../assets/blender-boston.jpg";
 import machine5 from "../assets/ice-machine.jpeg";
-import roballiGrinderThumb from "../assets/roballigrinder2.jpg";
 
 const Machine = () => {
   const navigate = useNavigate();
@@ -46,7 +45,6 @@ const Machine = () => {
     'machine-blender': machine4,
     'machine-cup-sealer': machine3,
     'machine-ice': machine5,
-    'machine-roballi-grinder': roballiGrinderThumb,
   };
 
   const products = machineProducts.map(product => ({
